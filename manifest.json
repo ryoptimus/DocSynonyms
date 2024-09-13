@@ -1,0 +1,18 @@
+{
+    "manifest_version": 3,
+    "name": "Crocs Thesaurus",
+    "description": "A thesaurus for use in Google Docs",
+    "version": "0.1.0",
+    "icons": {
+        "16": "/images/crocs-main-16x16.png",
+        "48": "/images/crocs-main-48x48.png",
+        "128": "/images/crocs-main-128x128.png"
+    },
+    "page_action": {
+        "default_icon": {
+            "16": "/images/crocs-page-16x16.png",
+            "48": "/images/crocs-page-48x48.png",
+            "128": "/images/crocs-page-128x128.png"
+        }
+    }
+}
