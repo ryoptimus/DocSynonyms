@@ -15,3 +15,7 @@ chrome.runtime.onInstalled.addListener(() => {
       });
     }
   });
+
+  function fetchWordData(selectedText) {
+    
+  }
