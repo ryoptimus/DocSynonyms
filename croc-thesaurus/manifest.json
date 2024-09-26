@@ -3,17 +3,20 @@
     "name": "Crocs Thesaurus",
     "description": "A thesaurus for use in Google Docs",
     "version": "0.1.0",
-    "permissions": ["storage", "activeTab"],
+    "permissions": [
+        "storage", 
+        "contextMenus",
+        "activeTab"],
     "background": {
         "service_worker": "background.js"
     },
     "content_scripts": [
-    {
-      "matches": "*://docs.google.com/document/d/*",
-      "all_frames": true,
-      "js": ["content.js"]
-    }
-  ],
+        {
+            "matches": "*://docs.google.com/document/d/*",
+            "all_frames": true,
+            "js": ["content.js"]
+        }
+    ],
     "icons": {
         "16": "/images/crocs-main-16x16.png",
         "48": "/images/crocs-main-48x48.png",
