@@ -14,7 +14,7 @@
     },
     "content_scripts": [
         {
-            "matches": "*://docs.google.com/document/d/*",
+            "matches": ["*://docs.google.com/document/d/*"],
             "all_frames": true,
             "js": ["content.js"]
         }
@@ -24,7 +24,8 @@
         "48": "/images/crocs-main-48x48.png",
         "128": "/images/crocs-main-128x128.png"
     },
-    "page_action": {
+    "action": {
+        "default_popup": "popup.html",
         "default_icon": {
             "16": "/images/crocs-page-16x16.png",
             "48": "/images/crocs-page-48x48.png",

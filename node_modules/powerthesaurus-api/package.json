@@ -1,0 +1,78 @@
+{
+  "name": "powerthesaurus-api",
+  "version": "2.0.3",
+  "description": "Look up English synonyms, antonyms, etc using powerthesaurus.org",
+  "license": "MIT",
+  "keywords": [
+    "powerthesaurus",
+    "english",
+    "synonym",
+    "antonym",
+    "related",
+    "narrower",
+    "broader",
+    "similar",
+    "rhymes",
+    "thesaurus"
+  ],
+  "repository": "words/powerthesaurus-api",
+  "bugs": "https://github.com/words/powerthesaurus-api/issues",
+  "author": "Zeke Sikelianos <zeke@sikelianos.com> (http://zeke.sikelianos.com)",
+  "contributors": [
+    "Zeke Sikelianos <zeke@sikelianos.com> (http://zeke.sikelianos.com)",
+    "Titus Wormer <tituswormer@gmail.com> (https://wooorm.com)"
+  ],
+  "main": "index.js",
+  "files": [
+    "index.js"
+  ],
+  "dependencies": {
+    "hast-util-select": "^4.0.0",
+    "hast-util-to-string": "^1.0.0",
+    "node-fetch": "^2.0.0",
+    "rehype-parse": "^6.0.0",
+    "unified": "^9.0.0"
+  },
+  "devDependencies": {
+    "nyc": "^15.0.0",
+    "prettier": "^2.0.0",
+    "remark-cli": "^8.0.0",
+    "remark-preset-wooorm": "^7.0.0",
+    "tape": "^4.0.0",
+    "xo": "^0.29.0"
+  },
+  "scripts": {
+    "format": "remark . -qfo && prettier --write \"**/*.js\" && xo --fix",
+    "test-api": "node test",
+    "test-coverage": "nyc --reporter lcov tape test.js",
+    "test": "npm run format && npm run test-coverage"
+  },
+  "nyc": {
+    "check-coverage": true,
+    "lines": 100,
+    "functions": 100,
+    "branches": 100
+  },
+  "prettier": {
+    "tabWidth": 2,
+    "useTabs": false,
+    "singleQuote": true,
+    "bracketSpacing": false,
+    "semi": false,
+    "trailingComma": "none"
+  },
+  "xo": {
+    "prettier": true,
+    "esnext": false,
+    "rules": {
+      "unicorn/prefer-number-properties": "off",
+      "unicorn/prefer-set-has": "off",
+      "promise/prefer-await-to-then": "off"
+    }
+  },
+  "remarkConfig": {
+    "plugins": [
+      "preset-wooorm"
+    ]
+  }
+}
