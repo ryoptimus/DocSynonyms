@@ -4,7 +4,6 @@
     "description": "A thesaurus for use in Google Docs",
     "version": "0.1.0",
     "permissions": [
-        "https://docs.google.com/document/d/*",
         "storage", 
         "contextMenus",
         "activeTab",
@@ -13,6 +12,9 @@
     "background": {
         "service_worker": "background.js"
     },
+    "host_permissions": [
+        "https://docs.google.com/document/d/*"
+    ],
     "content_scripts": [
         {
             "matches": ["https://docs.google.com/document/d/*"],
