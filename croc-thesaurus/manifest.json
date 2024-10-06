@@ -4,6 +4,7 @@
     "description": "A thesaurus for use in Google Docs",
     "version": "0.1.0",
     "permissions": [
+        "https://docs.google.com/document/d/*",
         "storage", 
         "contextMenus",
         "activeTab",
@@ -14,7 +15,7 @@
     },
     "content_scripts": [
         {
-            "matches": ["*://docs.google.com/document/d/*"],
+            "matches": ["https://docs.google.com/document/d/*"],
             "all_frames": true,
             "js": ["content.js"]
         }
@@ -26,6 +27,7 @@
     },
     "action": {
         "default_popup": "popup.html",
+        "default_title": "Crocs Thesaurus",
         "default_icon": {
             "16": "/images/crocs-page-16x16.png",
             "48": "/images/crocs-page-48x48.png",
