@@ -1,3 +1,32 @@
+console.log("content.js is loaded")
+
+//TODO: this still isn't working fuck my entire life
+
+let selectedText = "";  // Store the selected text globally
+
+document.addEventListener('mouseup', function() {
+    const linesData = GoogleDocsUtils.getSelection();  // Get the selection data from GoogleDocsUtils
+    let selectionData = null;
+
+    // Iterate through linesData and get the first available selection (if any)
+    for (const lineData of linesData) {
+        if (lineData) {
+            selectionData = lineData;
+            // Handle only a single selection
+            break;
+        }
+    }
+
+    // If there's a valid selection, update the selectedText variable
+    if (selectionData) {
+        selectedText = selectionData.selectedText.trim();
+    } else {
+        selectedText = "";  // Clear if no selection
+    }
+
+    console.log("Selected text updated: ", selectedText);
+});
+
 // Helper function to filter visible elements
 function filterHiddenElements(nodeList) {
     return Array.from(nodeList).filter(v => v.style.display !== "none" && !["hidden", "collapse"].includes(v.style.visibility));
@@ -10,9 +39,10 @@ function filterHiddenElements(nodeList) {
   }
   
   // Event handler to inject a custom context menu option in Google Docs
-  function contextMenuEventHandler(selectedText) {
+  function contextMenuEventHandler() {
+    console.log("Context menu event handler called");
     const id = "custom-context-menu-id";
-    const customContextMenuName = "Examine '${selectedText}'";  // Your custom name
+    const customContextMenuName = `Examine '${selectedText}'`;  // Your custom name
     const customContextMenuHint = "Get definition & synonyms";  // Custom hint for Google Docs
   
     const contextMenuElement = getContextMenuElement();
@@ -34,6 +64,7 @@ function filterHiddenElements(nodeList) {
           </div>`;
         
         const div = document.createElement("div");
+        console.log("Div element created:", div);
         div.innerHTML = innerHTML;
         div.className = "goog-menuitem apps-menuitem";
         div.id = id;
@@ -45,9 +76,19 @@ function filterHiddenElements(nodeList) {
   
         // Custom click event handling: Send a message to the background script to execute the script
         div.addEventListener("click", () => {
+            console.log("Click event detected, but message sending is disabled for now.");
+            // Debug the selectedText variable
+            console.log("Selected text is: ", selectedText || "default");
+
             chrome.runtime.sendMessage({
-            action: 'fetchWordData',
-            selectedText: selectedText  // Send the selected text as part of the message
+                action: 'fetchWordData',
+                selectedText: selectedText || "default"
+            }, (response) => {
+                if (chrome.runtime.lastError) {
+                    console.error("Runtime error:", chrome.runtime.lastError.message);
+                } else {
+                    console.log("Message sent successfully.", response);
+                }
             });
         });
   
@@ -59,13 +100,5 @@ function filterHiddenElements(nodeList) {
     }
   }
   
-// Add an event listener to handle the custom context menu in Google Docs
-document.body.addEventListener('contextmenu', (e) => {
-    // Dynamically call the event handler with the selected word
-    const selectedText = window.getSelection().toString().trim();
-    console.log("Trying to get selected text")
-    if (selectedText) {
-        console.log("Got selected text")
-        contextMenuEventHandler(selectedText);
-    }
-  });
+// Add context menu event listener
+document.body.addEventListener('contextmenu', contextMenuEventHandler);

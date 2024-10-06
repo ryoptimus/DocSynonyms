@@ -19,7 +19,10 @@
         {
             "matches": ["https://docs.google.com/document/d/*"],
             "all_frames": true,
-            "js": ["content.js"]
+            "js": [
+                "google-docs-utils.js",
+                "content.js"
+            ]
         }
     ],
     "icons": {
