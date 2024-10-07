@@ -3,13 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Word Info</title>
-    <script src="popup.js"></script> <!-- Add your popup logic here -->
+    <title>Croc Thesaurus</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 10px;
+        }
+        #word-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 5px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Crocs Thesaurus</h1>
-    <div id="content">
-        <!-- Definitions and synonyms will appear here -->
+    <div id="popup-content">
+        <h3 id="word-title">Word</h3>
+        <ul id="word-meanings"></ul>
     </div>
+    <script src="popup.js"></script>
 </body>
 </html>

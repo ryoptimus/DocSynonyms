@@ -1,31 +1,37 @@
 console.log("content.js is loaded")
 
-//TODO: this still isn't working fuck my entire life
+// TODO: this still isn't working fuck my entire life
+// https://stackoverflow.com/questions/74497762/how-to-get-the-selected-text-inside-google-docs-document-into-a-chrome-extension
+// https://stackoverflow.com/questions/75019646/get-selected-text
 
-let selectedText = "";  // Store the selected text globally
+// Inject script into the page context
+// var script = document.createElement('script');
+// script.src = chrome.runtime.getURL('script.js');
+// script.onload = function() {
+//   this.remove();
+//   console.log('Script loaded and removed');
+// };
+// (document.head || document.documentElement).appendChild(script);
+// console.log('Script appended');
 
+// Function to handle Google Docs text selection
+function getSelectedTextFromGoogleDocs() {
+  // Ensure gDocs and getSelection are defined before calling
+  if (window.gDocs && typeof window.gDocs.getSelection === 'function') {
+      const selectedText = window.gDocs.getSelection();
+      console.log("Selected text: " + selectedText);
+      return selectedText;
+  } else {
+      console.error("gDocs or getSelection is not available yet.");
+      return "";
+  }
+}
+
+// Example event listener for context menu (or any other event)
 document.addEventListener('mouseup', function() {
-    const linesData = GoogleDocsUtils.getSelection();  // Get the selection data from GoogleDocsUtils
-    let selectionData = null;
-
-    // Iterate through linesData and get the first available selection (if any)
-    for (const lineData of linesData) {
-        if (lineData) {
-            selectionData = lineData;
-            // Handle only a single selection
-            break;
-        }
-    }
-
-    // If there's a valid selection, update the selectedText variable
-    if (selectionData) {
-        selectedText = selectionData.selectedText.trim();
-    } else {
-        selectedText = "";  // Clear if no selection
-    }
-
-    console.log("Selected text updated: ", selectedText);
+  getSelectedTextFromGoogleDocs();
 });
+
 
 // Helper function to filter visible elements
 function filterHiddenElements(nodeList) {
@@ -41,7 +47,8 @@ function filterHiddenElements(nodeList) {
   // Event handler to inject a custom context menu option in Google Docs
   function contextMenuEventHandler() {
     console.log("Context menu event handler called");
-    const id = "custom-context-menu-id";
+    const id = "context-menu-id";
+    const selectedText = getSelectedTextFromGoogleDocs();
     const customContextMenuName = `Examine '${selectedText}'`;  // Your custom name
     const customContextMenuHint = "Get definition & synonyms";  // Custom hint for Google Docs
   
@@ -86,8 +93,16 @@ function filterHiddenElements(nodeList) {
             }, (response) => {
                 if (chrome.runtime.lastError) {
                     console.error("Runtime error:", chrome.runtime.lastError.message);
-                } else {
+                } else if (response.success) {
                     console.log("Message sent successfully.", response);
+                    // Send a message to popup.js to show the popup
+                    chrome.runtime.sendMessage({
+                      action: 'showPopup',
+                      word: response.data.word,
+                      meanings: response.data.meanings
+                    });
+                } else {
+                  console.error("Error fetching word data: ", response.error);
                 }
             });
         });
@@ -102,3 +117,23 @@ function filterHiddenElements(nodeList) {
   
 // Add context menu event listener
 document.body.addEventListener('contextmenu', contextMenuEventHandler);
+
+// Listener to handle messages from the background script
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === 'getSelectedText') {
+    const selectedText = getSelectedTextFromGoogleDocs();
+    sendResponse({ text: selectedText });
+  }
+});
+
+// add a test to see if messaging is working
+chrome.runtime.sendMessage({
+  action: 'testMessage',
+  selectedText: "Test"
+}, (response) => {
+  if (chrome.runtime.lastError) {
+      console.error("Runtime error:", chrome.runtime.lastError.message);
+  } else {
+      console.log("Message sent successfully:", response);
+  }
+});

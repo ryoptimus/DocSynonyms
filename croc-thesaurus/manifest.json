@@ -19,10 +19,13 @@
         {
             "matches": ["https://docs.google.com/document/d/*"],
             "all_frames": true,
-            "js": [
-                "google-docs-utils.js",
-                "content.js"
-            ]
+            "js": ["gdocs.js", "content.js"]
+        }
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": ["script.js"],
+            "matches": ["<all_urls>"]
         }
     ],
     "icons": {
