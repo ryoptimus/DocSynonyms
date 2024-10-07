@@ -83,7 +83,7 @@ function filterHiddenElements(nodeList) {
   
         // Custom click event handling: Send a message to the background script to execute the script
         div.addEventListener("click", () => {
-            console.log("Click event detected, but message sending is disabled for now.");
+            console.log("Click event detected");
             // Debug the selectedText variable
             console.log("Selected text is: ", selectedText || "default");
 

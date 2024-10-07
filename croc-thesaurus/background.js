@@ -17,6 +17,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         console.log("Data fetched for:", selectedText, response);
         // You can also send a response back to the content script if needed
         sendResponse({ success: true, data: response });
+
+      //   chrome.storage.local.set({ wordData: message }, () => {
+      //     console.log("Word data stored, opening popup...");
+      // });
       })
       .catch(error => {
         console.error("Error fetching data:", error);
@@ -25,6 +29,27 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
     return true; // Return true to indicate an asynchronous response
   }
+
+  // Relay the message to open the popup and store the word data
+  if (message.action === 'showPopup') {
+    console.log("Relaying showPopup message to popup");
+
+    // Store the data to be retrieved in popup.js
+    chrome.storage.local.set({ wordData: message }, () => {
+        console.log("Word data stored, opening popup...");
+
+        // TODO: Get rid of this. Don't want new popup window every time
+        // Programmatically open the popup window
+        chrome.windows.create({
+            url: "popup.html",
+            type: "popup",
+            width: 400,
+            height: 300
+        }, (newWindow) => {
+            console.log("Popup opened:", newWindow);
+        });
+    });
+}
 });
 
 function fetchWordData(selectedText) {
@@ -42,7 +67,7 @@ function fetchWordData(selectedText) {
       })
       .catch(error => {
           console.error('Error fetching definitions from Dictionary API:', error);
-          throw error; // Propagate the error to be handled in the .catch block in the background script
+          throw error;
       });
 }
 
