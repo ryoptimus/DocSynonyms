@@ -26,6 +26,10 @@
         {
             "resources": ["script.js"],
             "matches": ["<all_urls>"]
+        },
+        {
+            "resources": ["/images/menuIcon.png"],
+            "matches": ["<all_urls>"]
         }
     ],
     "icons": {

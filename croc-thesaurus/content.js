@@ -61,14 +61,34 @@ function filterHiddenElements(nodeList) {
   
       const separators = filterHiddenElements(contextMenuElement.querySelectorAll(".apps-hoverable-menu-separator-container"));
       if (separators.length) {
-        const innerHTML = `
-          <div class="goog-menuitem-content">
-            <div class="docs-icon goog-inline-block goog-menuitem-icon" aria-hidden="true">
-              <div class="docs-icon-img-container docs-icon-img docs-icon-cut"></div>
-            </div>
-            <span class="goog-menuitem-label">${customContextMenuName}</span>
-            <span class="goog-menuitem-accel" aria-label="⌘X">${customContextMenuHint}</span>
-          </div>`;
+        const iconURL = chrome.runtime.getURL('/images/menuIcon.png');
+        // const innerHTML = `
+        //   <div class="goog-menuitem-content">
+        //     <div class="docs-icon goog-inline-block goog-menuitem-icon" aria-hidden="true">
+        //       <img src="${iconURL}" style="width: 24px; height: 24px;">
+        //     </div>
+        //     <span class="goog-menuitem-label">${customContextMenuName}</span>
+        //     <span class="goog-menuitem-accel" aria-label="⌘X">${customContextMenuHint}</span>
+        //   </div>`;
+        
+          // const innerHTML = `
+          // <div class="goog-menuitem-content">
+          //   <div class="docs-icon goog-inline-block goog-menuitem-icon" aria-hidden="true" style="width: 24px; height: 24px; padding: 0; margin: 0;">
+          //     <img src="${iconURL}" style="width: 24px; height: 24px;">
+          //   </div>
+          //   <span class="goog-menuitem-label">${customContextMenuName}</span>
+          //   <span class="goog-menuitem-accel" aria-label="⌘X">${customContextMenuHint}</span>
+          // </div>`;
+
+          const innerHTML = `
+            <div class="goog-menuitem-content" style="display: flex; align-items: center; justify-content: flex-start;">
+              <div class="docs-icon goog-inline-block goog-menuitem-icon" aria-hidden="true" style="width: 24px; height: 24px;">
+                <img src="${iconURL}" style="width: 24px; height: 24px; margin: 0; padding: 0; transform: translate(-4px, -3px);">
+              </div>
+              <span class="goog-menuitem-label">${customContextMenuName}</span>
+              <span class="goog-menuitem-accel" aria-label="⌘X">${customContextMenuHint}</span>
+            </div>`;
+
         
         const div = document.createElement("div");
         console.log("Div element created:", div);
