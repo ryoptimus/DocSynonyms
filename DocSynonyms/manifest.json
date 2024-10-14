@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
-    "name": "Crocs Thesaurus",
-    "description": "A thesaurus for use in Google Docs",
+    "name": "DocSynonyms",
+    "description": "Synonym finder for Google Docs",
     "version": "0.1.0",
     "permissions": [
         "storage", 
@@ -33,17 +33,17 @@
         }
     ],
     "icons": {
-        "16": "/images/crocs-main-16x16.png",
-        "48": "/images/crocs-main-48x48.png",
-        "128": "/images/crocs-main-128x128.png"
+        "16": "/images/docsyn-main-16x16.png",
+        "48": "/images/docsyn-main-48x48.png",
+        "128": "/images/docsyn-main-128x128.png"
     },
     "action": {
         "default_popup": "popup.html",
-        "default_title": "Crocs Thesaurus",
+        "default_title": "DocSynonyms",
         "default_icon": {
-            "16": "/images/crocs-page-16x16.png",
-            "48": "/images/crocs-page-48x48.png",
-            "128": "/images/crocs-page-128x128.png"
+            "16": "/images/docsyn-page-16x16.png",
+            "48": "/images/docsyn-page-48x48.png",
+            "128": "/images/docsyn-page-128x128.png"
         }
     }
 }
