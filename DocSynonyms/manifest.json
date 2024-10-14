@@ -33,17 +33,17 @@
         }
     ],
     "icons": {
-        "16": "/images/docsyn-main-16x16.png",
-        "48": "/images/docsyn-main-48x48.png",
-        "128": "/images/docsyn-main-128x128.png"
+        "16": "/images/docsyn_16x16.png",
+        "48": "/images/docsyn_48x48.png",
+        "128": "/images/docsyn_128x128.png"
     },
     "action": {
         "default_popup": "popup.html",
         "default_title": "DocSynonyms",
         "default_icon": {
-            "16": "/images/docsyn-page-16x16.png",
-            "48": "/images/docsyn-page-48x48.png",
-            "128": "/images/docsyn-page-128x128.png"
+            "16": "/images/docsyn_page_16x16.png",
+            "48": "/images/docsyn_page_48x48.png",
+            "128": "/images/docsyn_page_128x128.png"
         }
     }
 }
