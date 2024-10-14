@@ -33,66 +33,79 @@ document.addEventListener('mouseup', function() {
 });
 
 
+// functions filterHiddenElements, getContextMenuElement, and contextMenuEventHandler (detailed below) developed from source:
+// https://stackoverflow.com/questions/58212111/adding-a-new-item-on-google-documents-context-menu-using-chrome-extension
+
 // Helper function to filter visible elements
 function filterHiddenElements(nodeList) {
-    return Array.from(nodeList).filter(v => v.style.display !== "none" && !["hidden", "collapse"].includes(v.style.visibility));
+  const arrayFromNodeList = Array.from(nodeList);
+  const filteredElements = arrayFromNodeList.filter(element => {
+    // Check element's display is not none
+    const isDisplayed = element.style.display !== "none";
+    // Check visibility is not "hidden" or "collapse"
+    const isVisible = !["hidden", "collapse"].includes(element.style.visibility);
+    return isDisplayed && isVisible;
+  });
+  // Return array of visible elements
+  return filteredElements;
   }
   
   // Helper function to find Google Docs' context menu
   function getContextMenuElement() {
-    const contextMenus = filterHiddenElements(document.querySelectorAll(".goog-menu.goog-menu-vertical.apps-menu-hide-mnemonics"));
-    return contextMenus.length > 0 ? contextMenus[0] : null;
+    // CSS class selector (.goog-menu.goog-menu-vertical.apps-menu-hide-mnemonics)
+    //  .goog-menu: Refers to a generic Google menu
+    //  .goog-menu-vertical: Indicates that the menu is vertically-aligned
+    //  .apps-menu-hide-mnemonics: Google Docs menu class, hides keyboard shortcuts and hints
+    const selector = ".goog-menu.goog-menu-vertical.apps-menu-hide-mnemonics";
+    // Get all context menu elements that match selector, visible or hidden
+    const nodeList = document.querySelectorAll(selector);
+    // Filter out hidden elements
+    const contextMenus = filterHiddenElements(nodeList)
+    // Check if there are visible context menus
+    const hasVisibleMenus = contextMenus.length > 0;
+    // Return first visible context menu if any exist, otherwise return null
+    return hasVisibleMenus ? contextMenus[0] : null;
   }
   
-  // Event handler to inject a custom context menu option in Google Docs
+  // Event handler to dynamically insert custom context menu item when context menu event in Google Docs is triggered
   function contextMenuEventHandler() {
     console.log("Context menu event handler called");
+    // Create unique identifier for custom context menu item
     const id = "context-menu-id";
+    // Get highlighted/selected text from Google Docs
     const selectedText = getSelectedTextFromGoogleDocs();
-    const customContextMenuName = `Examine '${selectedText}'`;  // Your custom name
-    const customContextMenuHint = "Get definition & synonyms";  // Custom hint for Google Docs
-  
+    // Context menu item customized name and menu hint
+    const customContextMenuName = `Examine '${selectedText}'`; 
+    const customContextMenuHint = "Get definition & synonyms";
+    
+    // Fetch context menu element
     const contextMenuElement = getContextMenuElement();
+    // Check that contextMenuElement exists
     if (contextMenuElement) {
       const preExisting = document.querySelector("#" + id);
       if (preExisting) {
-        preExisting.parentElement.removeChild(preExisting);  // Clean up the previous custom item
+        // Clean up the previous custom item
+        preExisting.parentElement.removeChild(preExisting);  
       }
   
       const separators = filterHiddenElements(contextMenuElement.querySelectorAll(".apps-hoverable-menu-separator-container"));
       if (separators.length) {
+        // Configure custom menu item appearance
         const iconURL = chrome.runtime.getURL('/images/menuIcon.png');
-        // const innerHTML = `
-        //   <div class="goog-menuitem-content">
-        //     <div class="docs-icon goog-inline-block goog-menuitem-icon" aria-hidden="true">
-        //       <img src="${iconURL}" style="width: 24px; height: 24px;">
-        //     </div>
-        //     <span class="goog-menuitem-label">${customContextMenuName}</span>
-        //     <span class="goog-menuitem-accel" aria-label="⌘X">${customContextMenuHint}</span>
-        //   </div>`;
-        
-          // const innerHTML = `
-          // <div class="goog-menuitem-content">
-          //   <div class="docs-icon goog-inline-block goog-menuitem-icon" aria-hidden="true" style="width: 24px; height: 24px; padding: 0; margin: 0;">
-          //     <img src="${iconURL}" style="width: 24px; height: 24px;">
-          //   </div>
-          //   <span class="goog-menuitem-label">${customContextMenuName}</span>
-          //   <span class="goog-menuitem-accel" aria-label="⌘X">${customContextMenuHint}</span>
-          // </div>`;
+        const innerHTML = `
+          <div class="goog-menuitem-content" style="display: flex; align-items: center; justify-content: flex-start;">
+            <div class="docs-icon goog-inline-block goog-menuitem-icon" aria-hidden="true" style="width: 24px; height: 24px;">
+              <img src="${iconURL}" style="width: 24px; height: 24px; margin: 0; padding: 0; transform: translate(-4px, -3px);">
+            </div>
+            <span class="goog-menuitem-label">${customContextMenuName}</span>
+            <span class="goog-menuitem-accel" aria-label="⌘X">${customContextMenuHint}</span>
+          </div>`;
 
-          const innerHTML = `
-            <div class="goog-menuitem-content" style="display: flex; align-items: center; justify-content: flex-start;">
-              <div class="docs-icon goog-inline-block goog-menuitem-icon" aria-hidden="true" style="width: 24px; height: 24px;">
-                <img src="${iconURL}" style="width: 24px; height: 24px; margin: 0; padding: 0; transform: translate(-4px, -3px);">
-              </div>
-              <span class="goog-menuitem-label">${customContextMenuName}</span>
-              <span class="goog-menuitem-accel" aria-label="⌘X">${customContextMenuHint}</span>
-            </div>`;
-
-        
+        // Create <div> element in the document object model (DOM)
         const div = document.createElement("div");
         console.log("Div element created:", div);
         div.innerHTML = innerHTML;
+        // Add CSS classes to style like a Google Docs menu item
         div.className = "goog-menuitem apps-menuitem";
         div.id = id;
         div.setAttribute("role", "menuitem");
@@ -107,6 +120,7 @@ function filterHiddenElements(nodeList) {
             // Debug the selectedText variable
             console.log("Selected text is: ", selectedText || "default");
 
+            // Send message to background script, ask it to fetch word data
             chrome.runtime.sendMessage({
                 action: 'fetchWordData',
                 selectedText: selectedText || "default"
