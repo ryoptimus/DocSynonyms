@@ -52,23 +52,45 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 }
 });
 
-function fetchWordData(selectedText) {
+async function fetchWordData(selectedText) {
   // Return a promise that resolves when the API call completes
-  return fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${selectedText}`)
-      .then(response => {
-          if (!response.ok) {
-              throw new Error(`Error: ${response.statusText}`);
-          }
-          return response.json();
-      })
-      .then(definitionData => {
-          const meanings = definitionData[0]?.meanings || [];
-          return { word: selectedText, meanings: meanings };
-      })
-      .catch(error => {
-          console.error('Error fetching definitions from Dictionary API:', error);
-          throw error;
-      });
+  // return fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${selectedText}`)
+  //     .then(response => {
+  //         if (!response.ok) {
+  //             throw new Error(`Error: ${response.statusText}`);
+  //         }
+  //         return response.json();
+  //     })
+  //     .then(definitionData => {
+  //         const meanings = definitionData[0]?.meanings || [];
+  //         return { word: selectedText, meanings: meanings };
+  //     })
+  //     .catch(error => {
+  //         console.error('Error fetching definitions from Dictionary API:', error);
+  //         throw error;
+  //     });
+// TODO: Unfinished. still gotta fix this shit
+  try {
+    const [dictionaryResponse, synonymsResponse] = await Promise.all([
+      fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${selectedText}`),
+      fetch(`${process.env.BACKEND}/get_synonyms?word=${selectedText}`)
+    ]);
+
+    if (!dictionaryResponse.ok) {
+      throw new Error(`Error from Dictionary API: ${dictionaryResponse.statusText}`);
+    }
+    const definitionData = await dictionaryResponse.json();
+    const meanings = definitionData[0]?.meanings || [];
+
+    if (!synonymsResponse.ok) {
+      throw new Error(`Error from Synonyms API: ${synonymsResponse.statusText}`);
+    }
+    const synonymsData = await synonymsResponse.json();
+    console.log(synonymsData);
+  } catch (error) {
+    console.error('Error fetching word data: ', error);
+    throw error;
+  }
 }
 
   // TEST: is messaging working?
