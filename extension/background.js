@@ -69,6 +69,7 @@ async function fetchWordData(selectedText) {
   //         console.error('Error fetching definitions from Dictionary API:', error);
   //         throw error;
   //     });
+  
 // TODO: Unfinished. still gotta fix this shit
   try {
     const [dictionaryResponse, synonymsResponse] = await Promise.all([
